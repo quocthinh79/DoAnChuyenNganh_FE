@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "",
+    "paths": {
+      "@components": ["./src/components/index.ts"],
+      "@core": ["./src/core/index.ts"],
+      "@constant": ["./src/const/index.ts"],
+      "@compositions": ["./src/compositions/index.ts"],
+      "@hooks": ["./src/hooks/index.ts"],
+      "@dummy-data": ["./src/dummy-data/index.ts"],
+      "@store": ["./src/store/index.ts"]
+    }
+  }
+}
