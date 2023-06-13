@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import routerAuthConfig from "./auth/routerAuthConfig";
 import RouterHomeLayout from "./routerHomeLayout";
 
 const HomePage = lazy(() => import("../pages/home"));
@@ -17,6 +18,9 @@ const router = [
         ),
       },
     ],
+  },
+  {
+    ...routerAuthConfig,
   },
 ];
 
