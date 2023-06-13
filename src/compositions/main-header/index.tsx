@@ -1,19 +1,19 @@
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { ContainerFixed, Flex } from "@components";
+import { ContainerFixed, Flex, Header, Image, Menu } from "@components";
 import { SPACE_BETWEEN_ITEMS } from "@constant";
 import {
   EBreakpoint,
   EFlexAlign,
   EJustifyFlex,
+  EModeMenu,
   routerPathFull,
   templateStringToClassName,
 } from "@core";
 import { cx } from "@emotion/css";
 import { useLogged } from "@hooks";
-import { Button, Form, Image, Input, Menu } from "antd";
+import { Button, Form, Input } from "antd";
 import { useForm } from "antd/es/form/Form";
 import FormItem from "antd/es/form/FormItem";
-import { Header } from "antd/es/layout/layout";
 import { memo, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -65,7 +65,7 @@ export function MainHeader() {
             <Menu
               defaultSelectedKeys={[routerPathFull.home.root + "/"]}
               selectedKeys={[location.pathname]}
-              mode={"horizontal"}
+              mode={EModeMenu.Horizontal}
               items={[
                 {
                   key: routerPathFull.cart.root,
