@@ -1,12 +1,15 @@
 import { Suspense, lazy } from "react";
 import { routerPathFull } from "../../core";
-// const LogoutPage = lazy(() => import("../../pages/auth/logout"));
 const LoginPage = lazy(() => import("../../pages/auth/login"));
 const RouterAuthLayout = lazy(() => import("./routerAuthLayout"));
 const ForgotPasswordPage = lazy(
   () => import("../../pages/auth/forgot-password")
 );
 const ChangePassword = lazy(() => import("../../pages/auth/change-password"));
+const NotifiChangePassword = lazy(
+  () => import("../../pages/auth/notification-change-password")
+);
+const RegisterPage = lazy(() => import("../../pages/auth/register"));
 
 export const routerAuthConfig: object = {
   path: routerPathFull.auth.root,
@@ -37,6 +40,30 @@ export const routerAuthConfig: object = {
       element: (
         <Suspense fallback={<>Loading</>}>
           <ChangePassword />
+        </Suspense>
+      ),
+    },
+    {
+      path: routerPathFull.auth.success,
+      element: (
+        <Suspense fallback={<>Loading</>}>
+          <NotifiChangePassword />
+        </Suspense>
+      ),
+    },
+    {
+      path: routerPathFull.auth.newPassword,
+      element: (
+        <Suspense fallback={<>Loading</>}>
+          <ChangePassword />
+        </Suspense>
+      ),
+    },
+    {
+      path: routerPathFull.auth.register,
+      element: (
+        <Suspense fallback={<>Loading</>}>
+          <RegisterPage />
         </Suspense>
       ),
     },
