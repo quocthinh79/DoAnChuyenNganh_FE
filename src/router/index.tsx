@@ -4,9 +4,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routerAuthConfig from "./auth/routerAuthConfig";
 import RouterHomeLayout from "./routerHomeLayout";
 import RouterLayout from "./routerLayout";
+
 const SuccessPage = lazy(() => import("../pages/success"));
 
 const HomePage = lazy(() => import("../pages/home"));
+const DetailPage = lazy(() => import("../pages/detail"));
 
 const router = [
   {
@@ -30,6 +32,14 @@ const router = [
         element: (
           <Suspense fallback={<>Loading</>}>
             <SuccessPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: routerPathFull.detail.root,
+        element: (
+          <Suspense fallback={<>Loading</>}>
+            <DetailPage />
           </Suspense>
         ),
       },
