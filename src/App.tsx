@@ -4,6 +4,7 @@ import { ConfigProvider } from "antd";
 import theme from "antd/es/theme";
 import { useMemo } from "react";
 import Router from "./router";
+import ChatFrame from "./compositions/chat-frame";
 
 const { useToken } = theme;
 const queryClient = new QueryClient();
@@ -17,6 +18,7 @@ function App() {
       <ConfigProvider>
         <ThemeProvider theme={token}>
           <Router />
+          <ChatFrame/>
         </ThemeProvider>
       </ConfigProvider>
     </QueryClientProvider>
