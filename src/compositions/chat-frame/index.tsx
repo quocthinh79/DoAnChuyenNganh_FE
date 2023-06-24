@@ -1,18 +1,27 @@
-import { ILaptopPagination, apiGetMultipleLaptop } from '@core';
-import { useQuery } from '@tanstack/react-query';
+import { ILaptopPagination, apiGetMultipleLaptop, apiChatAnswer, IAnswer, IQuestion } from '@core';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Modal } from 'antd';
-import { MessageFilled, CloseOutlined } from '@ant-design/icons';
+import { MessageFilled, CloseOutlined, DeleteFilled } from '@ant-design/icons';
 import './ChatFrame.scss';
 import { isVisible } from '@testing-library/user-event/dist/utils';
 import { format } from 'date-fns';
+import { cursorTo } from 'readline';
+import MessageTyping from '../message-typing';
+interface Message {
+    type: string;
+    content: string;
+}
 
 export function ChatFrame() {
     const buttonStyle = {
         width: 50,
         height: 50,
     };
+    const iconStyle = { cursor: 'pointer' };
+    const chatRef = useRef<HTMLDivElement>(null);
+
     const currentDate = new Date();
     const formattedDate = format(currentDate, 'EEEE, h:mm aa');
     const [showChatScreen, setShowChatScreen] = useState(false);
@@ -20,15 +29,91 @@ export function ChatFrame() {
         console.log('Dmm');
         setShowChatScreen(!showChatScreen);
     };
+    const [questionRequest, setQuestionRequest] = useState('');
+    const [messages, setMessages] = useState<Message[]>([]);
+    const mutation = useMutation<IAnswer, unknown, IQuestion>(apiChatAnswer);
+    const sendMessage = async () => {
+        let listMessage: Message[] = messages;
+        const message: Message = {
+            type: 'question',
+            content: questionRequest,
+        };
+
+        if (questionRequest != '') {
+            listMessage.push(message);
+            setMessages(listMessage);
+        }
+        setQuestionRequest('');
+
+        //Reponse
+        setTimeout(async () => {
+            try {
+                const question: IQuestion = {
+                    question: questionRequest,
+                };
+                const response = await mutation.mutateAsync(question);
+                const messageAI: Message = {
+                    type: 'answer',
+                    content: String(response),
+                };
+                setMessages([...messages, messageAI]);
+            } catch (error) {
+                const messageAI: Message = {
+                    type: 'answer',
+                    content: String('Lỗi ....'),
+                };
+                listMessage.push(messageAI);
+                setMessages(listMessage);
+            }
+        }, 300);
+    };
+    useEffect(() => {
+        scrollToButton();
+    }, [messages]);
+    const chatbotAnswer = async () => {
+        try {
+            const question: IQuestion = {
+                question: questionRequest,
+            };
+            const response = await mutation.mutateAsync(question);
+            const messageAI: Message = {
+                type: 'answer',
+                content: String(response),
+            };
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    const scrollToButton = () => {
+        //scroll to bottom
+
+        if (chatRef.current) {
+            const { scrollHeight, clientHeight } = chatRef.current;
+            console.log(scrollHeight);
+            chatRef.current.scrollTop = scrollHeight - clientHeight;
+        }
+    };
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
+            sendMessage();
+        }
+    };
+    const removeMessage = () => {
+        setMessages([]);
+        // scrollToButton();
+    };
+
     return (
         <div>
             <div className="fixed-button">
                 {showChatScreen ? (
                     <div className="chat-screen">
                         <div className="chat-header">
-                            <div className="chat-header-title">Let’s chat? - We're online</div>
+                            <div className="chat-header-title">Chatbot super smart</div>
                             <div className="chat-header-option show">
-                                <span className="dropdown custom-dropdown">
+                                <DeleteFilled style={iconStyle} onClick={removeMessage} />
+                                {/* <span className="dropdown custom-dropdown">
                                     <a
                                         className="dropdown-toggle"
                                         href="#"
@@ -100,7 +185,7 @@ export function ChatFrame() {
                                             End Chat
                                         </a>
                                     </div>
-                                </span>
+                                </span> */}
                             </div>
                         </div>
                         <div className="chat-mail hide">
@@ -137,9 +222,21 @@ export function ChatFrame() {
                                 </div>
                             </div>
                         </div>
-                        <div className="chat-body show">
+                        <div className="chat-body show" ref={chatRef}>
                             <div className="chat-start">{formattedDate}</div>
                             <div className="chat-bubble you">Welcome to our site, How can I help you.</div>
+                            {messages.map((message, index) =>
+                                message.type == 'question' ? (
+                                    <div key={index} className="chat-bubble me">
+                                        {message.content}
+                                    </div>
+                                ) : (
+                                    <div key={index} className="chat-bubble you">
+                                        {message.content}
+                                    </div>
+                                ),
+                            )}
+
                             <div className="chat-bubble you chat-wait hide">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +291,15 @@ export function ChatFrame() {
                             </div>
                         </div>
                         <div className="chat-input show">
-                            <input type="text" placeholder="Type a message..." />
+                            <input
+                                type="text"
+                                placeholder="Type a message..."
+                                value={questionRequest}
+                                onChange={(e) => {
+                                    setQuestionRequest(e.target.value);
+                                }}
+                                onKeyDown={handleKeyDown}
+                            />
                             <div className="input-action-icon">
                                 <a>
                                     <svg
@@ -212,7 +317,7 @@ export function ChatFrame() {
                                         <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                                     </svg>
                                 </a>
-                                <a id="send-message">
+                                <a id="send-message" onClick={sendMessage}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         width={24}
