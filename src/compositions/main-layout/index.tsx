@@ -1,11 +1,25 @@
-import { ContainerFixed } from "@components";
-import { SPACE_BETWEEN_ITEMS } from "@constant";
-import { EBreakpoint, templateStringToClassName } from "@core";
-import { Carousel, Divider, Image, Layout } from "antd";
-import { Content, Footer } from "antd/es/layout/layout";
+import { RESUME_LINK, SPACE_BETWEEN_ITEMS } from "@constant";
+import {
+  EBreakpoint,
+  ETargetAnchor,
+  ETextAlign,
+  templateStringToClassName,
+} from "@core";
 import { ReactNode, memo } from "react";
 import MainHeader from "../main-header";
 import MainSider from "../main-sider";
+import {
+  Card,
+  Carousel,
+  ContainerFixed,
+  Content,
+  Divider,
+  Footer,
+  Image,
+  Layout,
+  Link,
+  Text,
+} from "@components";
 
 export interface MainLayoutProps {
   children?: ReactNode;
@@ -50,14 +64,14 @@ export function MainLayout({ children, sider, carousel }: MainLayoutProps) {
       </ContainerFixed>
       <Footer style={{ marginTop: "auto" }}>
         <Divider />
-        {/* <ContainerFixed breakpoint={EBreakpoint.XL} position="center">
-          <Typography textAlign={ETextAlign.Center}>
+        <ContainerFixed breakpoint={EBreakpoint.XL} position="center">
+          <Text textAlign={ETextAlign.Center}>
             Electronic Commerce ©2023 Created by{" "}
             <Link target={ETargetAnchor.Blank} href={RESUME_LINK}>
               Lê Quốc Thịnh
             </Link>
-          </Typography>
-        </ContainerFixed> */}
+          </Text>
+        </ContainerFixed>
       </Footer>
     </Layout>
   );

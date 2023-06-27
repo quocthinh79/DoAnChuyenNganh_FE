@@ -1,36 +1,84 @@
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { ContainerFixed, Flex, Header, Image, Menu } from "@components";
+import {
+  Button,
+  ContainerFixed,
+  Flex,
+  Form,
+  FormItem,
+  Header,
+  Image,
+  InputSearch,
+} from "@components";
 import { SPACE_BETWEEN_ITEMS } from "@constant";
 import {
   EBreakpoint,
+  EButtonTypes,
   EFlexAlign,
+  EInputTextSize,
   EJustifyFlex,
   EModeMenu,
+  IGetCartOfUserRes,
+  apiGetCartOfUser,
   routerPathFull,
   templateStringToClassName,
 } from "@core";
 import { cx } from "@emotion/css";
 import { useLogged } from "@hooks";
-import { Button, Form, Input } from "antd";
+import {
+  useStorageRoles,
+  useStorageToken,
+  useStorageTotalCartItems,
+} from "@store";
+import { useQuery } from "@tanstack/react-query";
+import { Badge, Menu } from "antd";
 import { useForm } from "antd/es/form/Form";
-import FormItem from "antd/es/form/FormItem";
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const logo = require("../../images/logo.png");
 
 export function MainHeader() {
-  const logged = useLogged({});
+  const { setToken } = useStorageToken();
+  const { setRoles } = useStorageRoles();
+  const { token } = useStorageToken();
+  const logged = useLogged({ token });
   const location = useLocation();
   const navigator = useNavigate();
+  const { isAdmin } = useStorageRoles();
 
   const [form] = useForm();
 
-  const onFinish = (values: any) => {};
+  const onFinish = (values: any) => {
+    return values.keyWord
+      ? navigator(`${routerPathFull.search.root}?keyWord=${values.keyWord}`)
+      : navigator("/");
+  };
+
+  const { setTotalCartItems, totalCartItems } = useStorageTotalCartItems();
+
+  const { refetch } = useQuery<IGetCartOfUserRes>({
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    queryKey: ["getCartItemsHeader"],
+    queryFn: () => apiGetCartOfUser({ token }),
+    onSuccess(data) {
+      const sum = data.laptopDTOs.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.quantity;
+      }, 0);
+      setTotalCartItems(sum);
+    },
+    onError(err) {
+      console.log(err);
+    },
+  });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const component = useMemo(() => {
     return (
-      <Header>
+      <Header position="sticky">
         <ContainerFixed
           className={templateStringToClassName()`height: 100%; display: flex;`}
           breakpoint={EBreakpoint.XL}
@@ -47,44 +95,62 @@ export function MainHeader() {
             <Flex align={EFlexAlign.Center} gap={SPACE_BETWEEN_ITEMS}>
               <Form form={form} onFinish={onFinish} layout="vertical">
                 <FormItem name="keyWord">
-                  <Input.Search
+                  <InputSearch
                     placeholder="Nhập từ bạn cần tìm kiếm ..."
                     enterButton="Search"
-                    size={"middle"}
+                    size={EInputTextSize.Middle}
                     onSearch={() => form.submit()}
                   />
                 </FormItem>
               </Form>
               <Button
-                type={"default"}
+                type={EButtonTypes.Default}
                 onClick={() => navigator(routerPathFull.aboutUs.root)}
               >
                 Về chúng tôi
               </Button>
+              {isAdmin() && (
+                <Button
+                  type={EButtonTypes.Default}
+                  onClick={() => navigator(routerPathFull.admin.laptop)}
+                >
+                  ADMIN
+                </Button>
+              )}
             </Flex>
             <Menu
               defaultSelectedKeys={[routerPathFull.home.root + "/"]}
               selectedKeys={[location.pathname]}
               mode={EModeMenu.Horizontal}
+              onClick={({ key }) => {
+                if (key === routerPathFull.auth.logout) {
+                  setToken("");
+                  setRoles([]);
+                }
+              }}
               items={[
                 {
                   key: routerPathFull.cart.root,
-                  label: (
+                  label: token ? (
                     <Link to={routerPathFull.cart.root}>
-                      {/* <Badge
+                      <Badge
                         count={totalCartItems === 0 ? null : totalCartItems}
-                      > */}
-                      <ShoppingCartOutlined style={{ fontSize: "28px" }} />
-                      {/* </Badge> */}
+                      >
+                        <ShoppingCartOutlined style={{ fontSize: "28px" }} />
+                      </Badge>
                     </Link>
+                  ) : (
+                    <></>
                   ),
                 },
                 {
                   key: routerPathFull.account.root,
-                  label: (
+                  label: token ? (
                     <Link to={routerPathFull.account.root}>
                       <UserOutlined style={{ fontSize: "28px" }} />
                     </Link>
+                  ) : (
+                    <></>
                   ),
                 },
                 logged,
@@ -94,7 +160,7 @@ export function MainHeader() {
         </ContainerFixed>
       </Header>
     );
-  }, [logged]);
+  }, [token, isAdmin, logged]);
 
   return <>{component}</>;
 }

@@ -1,15 +1,17 @@
 import { Suspense, lazy } from "react";
 import { routerPathFull } from "../../core";
-const LoginPage = lazy(() => import("../../pages/auth/login"));
-const RouterAuthLayout = lazy(() => import("./routerAuthLayout"));
+import Logout from "../../pages/auth/logout";
+
 const ForgotPasswordPage = lazy(
   () => import("../../pages/auth/forgot-password")
 );
-const ChangePassword = lazy(() => import("../../pages/auth/change-password"));
-const NotifiChangePassword = lazy(
-  () => import("../../pages/auth/notification-change-password")
-);
+
+// const LogoutPage = lazy(() => import("../../pages/auth/logout"));
+const LoginPage = lazy(() => import("../../pages/auth/login"));
 const RegisterPage = lazy(() => import("../../pages/auth/register"));
+const RouterAuthLayout = lazy(() => import("./routerAuthLayout"));
+const OTP = lazy(() => import("../../pages/auth/notification-change-password"));
+const ChangePassword = lazy(() => import("../../pages/auth/change-password"));
 
 export const routerAuthConfig: object = {
   path: routerPathFull.auth.root,
@@ -19,6 +21,10 @@ export const routerAuthConfig: object = {
     </Suspense>
   ),
   children: [
+    {
+      path: routerPathFull.auth.logout,
+      element: <Logout />,
+    },
     {
       path: routerPathFull.auth.login,
       element: (
@@ -36,10 +42,10 @@ export const routerAuthConfig: object = {
       ),
     },
     {
-      path: routerPathFull.auth.newPassword,
+      path: routerPathFull.auth.register,
       element: (
         <Suspense fallback={<>Loading</>}>
-          <ChangePassword />
+          <RegisterPage />
         </Suspense>
       ),
     },
@@ -47,7 +53,7 @@ export const routerAuthConfig: object = {
       path: routerPathFull.auth.success,
       element: (
         <Suspense fallback={<>Loading</>}>
-          <NotifiChangePassword />
+          <OTP />
         </Suspense>
       ),
     },
@@ -56,14 +62,6 @@ export const routerAuthConfig: object = {
       element: (
         <Suspense fallback={<>Loading</>}>
           <ChangePassword />
-        </Suspense>
-      ),
-    },
-    {
-      path: routerPathFull.auth.register,
-      element: (
-        <Suspense fallback={<>Loading</>}>
-          <RegisterPage />
         </Suspense>
       ),
     },

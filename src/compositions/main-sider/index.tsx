@@ -1,12 +1,16 @@
 import styled from "@emotion/styled";
 import { Collapse } from "antd";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
-// import { Sider } from "../../components";
-import { EOrderTags } from "@core";
-import { useQuery } from "@tanstack/react-query";
-import Sider from "antd/es/layout/Sider";
+import { Sider } from "../../components";
 import useSelectedTag from "../../hooks/use-selected-tag/use-selected-tag";
 import SiderItem from "./sider-item";
+import { useQuery } from "@tanstack/react-query";
+import {
+  EOrderTags,
+  apiBrandFilterItems,
+  apiCPUFilterItems,
+  apiTypeFilterItems,
+} from "@core";
 
 const StyledContainer = styled("div")`
   .ant-layout-sider {
@@ -18,20 +22,20 @@ export function MainSider() {
   const { data: brandFilterItems } = useQuery<string[]>({
     refetchOnWindowFocus: false,
     queryKey: ["BrandFilterItems"],
-    // queryFn: () => apiBrandFilterItems(),
+    queryFn: () => apiBrandFilterItems(),
   });
 
   const { data: typeFilterItems } = useQuery<string[]>({
     refetchOnWindowFocus: false,
     queryKey: ["TypeFilterItems"],
-    // queryFn: () => apiTypeFilterItems(),
+    queryFn: () => apiTypeFilterItems(),
   });
   // console.log(typeFilterItems);
 
   const { data: cpuFilterItems } = useQuery<string[]>({
     refetchOnWindowFocus: false,
     queryKey: ["CPUFilterItems"],
-    // queryFn: () => apiCPUFilterItems(),
+    queryFn: () => apiCPUFilterItems(),
   });
 
   const demandData: string[] = [

@@ -3,10 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { IPagination } from "src/core/types/interfaces/IPagination";
-// import { Pagination } from "../../components";
-import { Col, Pagination, Row } from "antd";
-// import { Row } from "../../components/grid";
-// import Col from "../../components/grid/column";
+import { Pagination } from "../../components";
+import { Row } from "../../components/grid";
+import Col from "../../components/grid/column";
 import { SPACE_BETWEEN_ITEMS } from "../../const";
 import LaptopCardItem from "../laptop-card-item";
 
