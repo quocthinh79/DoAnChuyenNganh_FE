@@ -1,6 +1,7 @@
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { routerPathFull } from "../../core";
+import { Button } from "@components";
 
 export interface useLoggedProps {
   token?: string;

@@ -1,8 +1,12 @@
-import { Badge, Card, Descriptions, Image } from "antd";
-import DescriptionsItem from "antd/es/descriptions/Item";
-import Title from "antd/es/typography/Title";
+import { useTheme } from "@emotion/react";
 import { Link } from "react-router-dom";
+import Card from "../../components/card";
+import DescriptionItem from "../../components/description-item";
+import Description from "../../components/descriptions";
+import Image from "../../components/image";
+import { Title } from "../../components/typography";
 import { formatCurrency } from "../../core";
+import { BadgeRibbon } from "@components";
 
 export interface LaptopCardItemProps {
   linkAvatar?: string;
@@ -18,24 +22,25 @@ export function LaptopCardItem({
   productName = "Lenovo Legion 5 Pro 2022",
   linkAvatar = "",
 }: LaptopCardItemProps) {
+  const { colorPrice } = useTheme();
   return (
     <Link to={`/detail/${id}`}>
-      <Badge.Ribbon text="Hot" color="red">
+      <BadgeRibbon text="Hot" color="red">
         <Card hoverable bodyStyle={{ height: "410px" }}>
           <Image placeholder={productName} preview={false} src={linkAvatar} />
           <Title ellipsis={{ rows: 2 }} level={4}>
             {productName}
           </Title>
-          <Descriptions>
-            <DescriptionsItem
-              contentStyle={{ color: "red", fontWeight: 700 }}
+          <Description>
+            <DescriptionItem
+              contentStyle={{ color: colorPrice, fontWeight: 700 }}
               label="Giá"
             >
               {formatCurrency(price, "VND")}
-            </DescriptionsItem>
-          </Descriptions>
+            </DescriptionItem>
+          </Description>
         </Card>
-      </Badge.Ribbon>
+      </BadgeRibbon>
     </Link>
   );
 }
