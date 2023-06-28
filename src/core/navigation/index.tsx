@@ -41,6 +41,12 @@ export const routerPath = {
   success: {
     root: "success",
   },
+  orderList: {
+    root: "order-list",
+  },
+  orderDetail: {
+    root: "order-detail/:idOrder",
+  },
 };
 
 export type TRouterPath = typeof routerPath;

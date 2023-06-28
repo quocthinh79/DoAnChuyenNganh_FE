@@ -1,4 +1,8 @@
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   ContainerFixed,
@@ -18,7 +22,7 @@ import {
   EJustifyFlex,
   EModeMenu,
   IGetCartOfUserRes,
-  apiGetCartOfUser,
+  apiGetOrderDetail,
   routerPathFull,
   templateStringToClassName,
 } from "@core";
@@ -60,7 +64,7 @@ export function MainHeader() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryKey: ["getCartItemsHeader"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryFn: () => apiGetOrderDetail({ token }),
     onSuccess(data) {
       const sum = data.laptopDTOs.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.quantity;
@@ -119,6 +123,7 @@ export function MainHeader() {
               )}
             </Flex>
             <Menu
+              inlineIndent={24}
               defaultSelectedKeys={[routerPathFull.home.root + "/"]}
               selectedKeys={[location.pathname]}
               mode={EModeMenu.Horizontal}
@@ -129,6 +134,16 @@ export function MainHeader() {
                 }
               }}
               items={[
+                {
+                  key: routerPathFull.orderList.root,
+                  label: token ? (
+                    <Link to={routerPathFull.orderList.root}>
+                      <CopyOutlined style={{ fontSize: "28px" }} />
+                    </Link>
+                  ) : (
+                    <></>
+                  ),
+                },
                 {
                   key: routerPathFull.cart.root,
                   label: token ? (
