@@ -71,8 +71,7 @@ function DetailProductItem({}) {
     queryKey: ["listImage"],
     queryFn: () => apiGetImagesLaptop(Number(idProduct)),
   });
-  console.log("listImages")
-  console.log(listImages)
+
   const { mutate: addProductToCart } = useMutation({
     mutationKey: ["addProductToCart"],
     mutationFn: apiAddToCart,
