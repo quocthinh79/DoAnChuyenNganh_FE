@@ -1,6 +1,4 @@
-// import { CheckableTag, Flex } from "../../components";
-import { Flex } from "@components";
-import CheckableTag from "antd/es/tag/CheckableTag";
+import { CheckableTag, Flex } from "../../components";
 import { EWrapFlex } from "../../core";
 import { handleSpecialSymbol } from "../../core/utilities/navigation/search-params";
 import { SelectedTagsProps } from "../../hooks";

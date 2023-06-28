@@ -1,6 +1,12 @@
-export * from "./main-header";
-export * from "./main-layout";
-export * from "./main-sider";
-export * from "./product-item-layout/product-item-layout";
+export * from "./left-right-layout";
+export * from "./account";
+export * from "./payment";
+export * from "./select-provinces-form-item";
 export * from "./laptop-card-item";
+// export { default as AdminTable } from "./admin-table";
+export { default as ProductItemLayout } from "./product-item-layout/product-item-layout";
+export { default as UploadMultipleFile } from "./upload-multiple-file";
+export * from "./upload-single-file";
+export * from "./admin-table/laptop/table-laptop";
 export { default as DetailProductItem } from "./detail-product-item/detail-product-item";
+export { default as TableAccount } from "./admin-table/account/table-account";
