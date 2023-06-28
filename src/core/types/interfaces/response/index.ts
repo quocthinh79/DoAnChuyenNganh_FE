@@ -6,3 +6,6 @@ export * from "./IGetCartOfUserRes";
 export * from "./IGetOnlyAccountRes";
 export * from "./IUpdateAccountRes";
 export * from "./IListImagesLaptop";
+export * from "./IAddToOrderReq";
+export * from "./IOrderListReq";
+export * from "./IOrderDetailReq";

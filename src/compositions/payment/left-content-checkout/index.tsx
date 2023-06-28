@@ -17,7 +17,8 @@ import {
   IGetCartOfUserRes,
   IGetOnlyAccountRes,
   IUpdateAccountReq,
-  apiGetCartOfUser,
+  apiAddToOrder,
+  apiGetOrderDetail,
   apiGetOnlyAccount,
   apiUpdateAccount,
   routerPathFull,
@@ -52,6 +53,17 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
     updateAccount({ ...passProps, token });
   };
 
+  const { mutate: addToOrder } = useMutation({
+    mutationKey: ["order"],
+    mutationFn: apiAddToOrder,
+    onSuccess(data, variables, context) {
+      console.log("🚀 ~ file: index.tsx:60 ~ onSuccess ~ data:", data);
+    },
+    onError(error, variables, context) {
+      console.log("🚀 ~ file: index.tsx:63 ~ onError ~ error:", error);
+    },
+  });
+
   const { mutate: updateAccount } = useMutation({
     mutationKey: ["account"],
     mutationFn: apiUpdateAccount,
@@ -64,7 +76,8 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
       });
 
       setValueInput(address || "");
-      navigator(routerPathFull.success.root);
+      addToOrder({ token });
+      // navigator(routerPathFull.success.root);
     },
     onError: (error) => {
       console.log(error);
@@ -79,7 +92,7 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
   } = useQuery<IGetCartOfUserRes>({
     refetchOnWindowFocus: false,
     queryKey: ["getCartItems"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryFn: () => apiGetOrderDetail({ token }),
     onSuccess(data) {
       console.log(data);
     },

@@ -4,3 +4,4 @@ export * from "./laptop";
 export * from "./filter-item";
 export * from "./cart";
 export * from "./account";
+export * from "./order";

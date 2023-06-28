@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   IGetCartOfUserRes,
   IProduct,
-  apiGetCartOfUser,
+  apiGetOrderDetail,
   apiRemoveItemInCart,
   sumValueArray,
 } from "@core";
@@ -25,7 +25,7 @@ export const useHandleCartItems = (): useHandleCartItems => {
   const { data } = useQuery<IGetCartOfUserRes>({
     refetchOnWindowFocus: false,
     queryKey: ["getCartItems"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryFn: () => apiGetOrderDetail({ token }),
   });
 
   const { laptopDTOs, totalPayment } = data || {};

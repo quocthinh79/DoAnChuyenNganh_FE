@@ -10,3 +10,5 @@ export * from "./upload-single-file";
 export * from "./admin-table/laptop/table-laptop";
 export { default as DetailProductItem } from "./detail-product-item/detail-product-item";
 export { default as TableAccount } from "./admin-table/account/table-account";
+export { default as ListOrder } from "./order";
+export { default as OrderDetail } from "./order-detail";

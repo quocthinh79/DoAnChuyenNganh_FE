@@ -14,6 +14,8 @@ const DetailPage = lazy(() => import("../pages/detail"));
 const PaymentPage = lazy(() => import("../pages/payment"));
 const SearchPage = lazy(() => import("../pages/search"));
 const SuccessPage = lazy(() => import("../pages/success"));
+const OrderListPage = lazy(() => import("../pages/list-order"));
+const OrderDetailPage = lazy(() => import("../pages/detail-order"));
 
 const router = [
   {
@@ -77,6 +79,22 @@ const router = [
         element: (
           <Suspense fallback={<>Loading</>}>
             <PaymentPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: routerPathFull.orderList.root,
+        element: (
+          <Suspense fallback={<>Loading</>}>
+            <OrderListPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: routerPathFull.orderDetail.root,
+        element: (
+          <Suspense fallback={<>Loading</>}>
+            <OrderDetailPage />
           </Suspense>
         ),
       },

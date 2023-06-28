@@ -5,3 +5,4 @@ export * from "./IUpdateAccountReq";
 export * from "./IUpdateLaptopReq";
 export * from "./IDeleteLaptopReq";
 export * from "./ISearchLaptopWithName";
+export * from "./IOrderListRes";
