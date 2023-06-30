@@ -3,6 +3,7 @@ import {
   ILogin,
   INewPassword,
   IRegister,
+  ILoginGoogle,
 } from "src/core/types";
 import instanceAxios from "../instance-axios";
 
@@ -14,6 +15,16 @@ export const apiLogin = ({ username, password }: ILogin) => {
     })
     .then((res) => res.data);
 };
+
+export const apiLoginGoogle = ({tokenId}: ILoginGoogle) => {
+  
+  return instanceAxios
+    .post("/auth/loginGoogle", {
+      tokenId
+    })
+    .then((res) => res.data);
+};
+
 
 export const apiForgotPassword = ({ username, host }: IForgotPassword) => {
   return instanceAxios

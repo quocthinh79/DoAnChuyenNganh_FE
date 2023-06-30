@@ -14,6 +14,7 @@ import {
   EJustifyFlex,
   ILogin,
   apiLogin,
+  apiLoginGoogle,
   handleSchemaError,
   messError,
   routerPathFull,
@@ -22,12 +23,14 @@ import {
 import { usePathname, useStorageRoles, useStorageToken } from "@store";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "antd/es/form/Form";
-import { memo } from "react";
+import { memo,useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginFormItem from "./login-form-item";
+import LoginGoogleButton from "./google-login-button/login-google-button";
 import { notification } from "antd";
 import axios from "axios";
-
+import { gapi } from "gapi-script"
+import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
 export interface LoginProps {}
 
 export interface LoginFormProps extends ILogin {
@@ -68,6 +71,41 @@ export function LoginPage(_props: LoginProps) {
     }
   };
 
+  useEffect(() => {
+    gapi.load("client:auth2", () => {
+      gapi.client.init({
+        clientId:
+          "http://localhost:3000",
+        plugin_name: "login google",
+      });
+    });
+  },[])
+  const { mutate: loginGoogle } = useMutation({
+      mutationKey: ["apiLoginGoogle"],
+      mutationFn: apiLoginGoogle,
+      onSuccess: (data) => {
+        pathname === "" ? navigation("/") : navigation(pathname);
+        setToken(data.token);
+        setRoles(data.roles);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+      },
+      onError: (error: any) => {
+        api["error"]({
+          message: "LỖI",
+          description: messError(error),
+          
+        });
+      },
+    });
+
+    const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline): void => {
+      console.log(response)
+      if ('tokenId' in response) {
+        const { tokenId } = response;
+        loginGoogle({tokenId});
+      }
+    };
+
   return (
     <>
       {contextHolder}
@@ -100,6 +138,7 @@ export function LoginPage(_props: LoginProps) {
                     >
                       Đăng nhập
                     </Button>
+                    <LoginGoogleButton onClick={responseGoogle}/>
                     <Flex justify={EJustifyFlex.Center}>
                       <Link to={routerPathFull.auth.register}>
                         Đăng kí tài khoản
