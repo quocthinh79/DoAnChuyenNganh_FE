@@ -22,9 +22,10 @@ import {
   apiGetOnlyAccount,
   apiUpdateAccount,
   routerPathFull,
+  apiGetCartOfUser,
 } from "@core";
 import { useHandleCartItems } from "@hooks";
-import { useStorageToken } from "@store";
+import { useStorageToken, useStorageTotalCartItems } from "@store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Collapse } from "antd";
 import CollapsePanel from "antd/es/collapse/CollapsePanel";
@@ -52,11 +53,14 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
     const passProps = { fullName, phone, address, addressDetail };
     updateAccount({ ...passProps, token });
   };
+  const { setTotalCartItems, totalCartItems } = useStorageTotalCartItems();
 
   const { mutate: addToOrder } = useMutation({
     mutationKey: ["order"],
     mutationFn: apiAddToOrder,
     onSuccess(data, variables, context) {
+      navigator(routerPathFull.orderList.root);
+      setTotalCartItems(0);
       console.log("🚀 ~ file: index.tsx:60 ~ onSuccess ~ data:", data);
     },
     onError(error, variables, context) {
@@ -92,7 +96,7 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
   } = useQuery<IGetCartOfUserRes>({
     refetchOnWindowFocus: false,
     queryKey: ["getCartItems"],
-    queryFn: () => apiGetOrderDetail({ token }),
+    queryFn: () => apiGetCartOfUser({ token }),
     onSuccess(data) {
       console.log(data);
     },

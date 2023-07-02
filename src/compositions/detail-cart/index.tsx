@@ -1,6 +1,7 @@
 import {
   IGetCartOfUserRes,
   apiAddToCart,
+  apiGetCartOfUser,
   apiGetOrderDetail,
   apiReduceItem,
   apiRemoveItemInCart,
@@ -30,7 +31,7 @@ export function DetailCart() {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     queryKey: ["getCartItemsInCart"],
-    queryFn: () => apiGetOrderDetail({ token }),
+    queryFn: () => apiGetCartOfUser({ token }),
     onSuccess(data) {
       const sum = data?.laptopDTOs?.reduce(
         (accumulator: any, currentValue: any) => {

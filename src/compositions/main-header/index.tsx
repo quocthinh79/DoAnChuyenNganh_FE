@@ -22,6 +22,7 @@ import {
   EJustifyFlex,
   EModeMenu,
   IGetCartOfUserRes,
+  apiGetCartOfUser,
   apiGetOrderDetail,
   routerPathFull,
   templateStringToClassName,
@@ -64,7 +65,7 @@ export function MainHeader() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryKey: ["getCartItemsHeader"],
-    queryFn: () => apiGetOrderDetail({ token }),
+    queryFn: () => apiGetCartOfUser({ token }),
     onSuccess(data) {
       const sum = data.laptopDTOs.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.quantity;
