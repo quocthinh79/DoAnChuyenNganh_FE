@@ -139,6 +139,7 @@ export function LoginPage(_props: LoginProps) {
                       Đăng nhập
                     </Button>
                     <LoginGoogleButton onClick={responseGoogle}/>
+                    <a href="https://www.facebook.com/v16.0/dialog/oauth?redirect_uri=http://localhost:8085/oauth2/authorization/facebook/v2&client_id=1217081152339317&client_secret=16023480e21272ccec22bad82d5c50b9" type="submit">Đăng nhập với Facebook</a>
                     <Flex justify={EJustifyFlex.Center}>
                       <Link to={routerPathFull.auth.register}>
                         Đăng kí tài khoản
