@@ -10,7 +10,7 @@ export function ListOrder(props: ListOrderProps) {
   const { token } = useStorageToken();
   const { data: listOrder } = useQuery<IOrderListRes[]>({
     queryKey: ["listOrder"],
-    queryFn: () => apiGetOrderList({ token }),
+    queryFn: () => apiGetOrderList(),
   });
   console.log("🚀 ~ file: index.tsx:13 ~ ListOrder ~ listOrder:", listOrder);
 

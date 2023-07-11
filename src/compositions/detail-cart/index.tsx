@@ -9,7 +9,7 @@ import {
 } from "@core";
 import { usePathname, useStorageToken, useStorageTotalCartItems } from "@store";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductItemCart from "../../compositions/product-item-cart";
 import TotalPriceInCart from "../../compositions/total-price-in-cart";
@@ -21,17 +21,13 @@ export function DetailCart() {
   const setPathname = usePathname((state: any) => state.setPathname);
   const { pathname } = useLocation();
   const { setTotalCartItems, totalCartItems } = useStorageTotalCartItems();
+  const [enableGet, setEnableGet] = useState(true);
 
-  const {
-    data,
-    refetch,
-    isSuccess: getCartSuccess,
-    isLoading: loadingGetCart,
-  } = useQuery<IGetCartOfUserRes>({
+  const { data, refetch } = useQuery<IGetCartOfUserRes>({
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    queryKey: ["getCartItemsInCart"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryKey: ["getCartItemsInCart", token, pathname],
+    queryFn: () => apiGetCartOfUser(),
     onSuccess(data) {
       const sum = data?.laptopDTOs?.reduce(
         (accumulator: any, currentValue: any) => {
@@ -40,13 +36,20 @@ export function DetailCart() {
         0
       );
       setTotalCartItems(sum || 0);
+      setEnableGet(false);
+      console.log(enableGet);
     },
     onError(err) {
       console.log(err);
       setPathname(pathname);
       navigation(routerPathFull.auth.login);
     },
+    enabled: enableGet,
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const { laptopDTOs, totalPayment } = data || {};
 
@@ -54,6 +57,7 @@ export function DetailCart() {
     mutationKey: ["removeItemFromCart"],
     mutationFn: apiRemoveItemInCart,
     onSuccess(data, variables, context) {
+      setEnableGet(true);
       const sum = data?.laptopDTOs?.reduce(
         (accumulator: any, currentValue: any) => {
           return accumulator + currentValue.quantity;
@@ -72,6 +76,7 @@ export function DetailCart() {
     mutationFn: apiAddToCart,
     onSuccess(data, variables, context) {
       console.log(data);
+      setEnableGet(true);
     },
     onError(error, variables, context) {
       console.log(error);
@@ -82,6 +87,7 @@ export function DetailCart() {
     mutationKey: ["apiReduceItem"],
     mutationFn: apiReduceItem,
     onSuccess(data, variables, context) {
+      setEnableGet(true);
       const sum = data?.laptopDTOs?.reduce(
         (accumulator: any, currentValue: any) => {
           return accumulator + currentValue.quantity;
@@ -99,16 +105,16 @@ export function DetailCart() {
     removeItem({ token: token, ids: [laptopID] });
   };
 
-  useEffect(() => {
-    refetch();
-  }, [
-    loadingGetCart,
-    getCartSuccess,
-    removeSuccess,
-    addSuccess,
-    decreaseSuccess,
-    data,
-  ]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [
+  //   loadingGetCart,
+  //   getCartSuccess,
+  //   removeSuccess,
+  //   addSuccess,
+  //   decreaseSuccess,
+  //   data,
+  // ]);
 
   return (
     <LeftRightLayout

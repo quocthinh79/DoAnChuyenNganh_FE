@@ -80,7 +80,7 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
       });
 
       setValueInput(address || "");
-      addToOrder({ token });
+      addToOrder();
       // navigator(routerPathFull.success.root);
     },
     onError: (error) => {
@@ -96,7 +96,7 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
   } = useQuery<IGetCartOfUserRes>({
     refetchOnWindowFocus: false,
     queryKey: ["getCartItems"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryFn: () => apiGetCartOfUser(),
     onSuccess(data) {
       console.log(data);
     },
@@ -106,7 +106,7 @@ export function LeftContentCheckout({ form }: LeftContentCheckoutProps) {
   const { isSuccess: isGetAccountSuccess } = useQuery<IGetOnlyAccountRes>({
     refetchOnWindowFocus: false,
     queryKey: ["account"],
-    queryFn: () => apiGetOnlyAccount({ token }),
+    queryFn: () => apiGetOnlyAccount(),
     onSuccess({ fullName, phone, address, addressDetail }) {
       form.setFieldsValue({
         fullName,

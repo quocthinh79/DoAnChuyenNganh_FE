@@ -26,7 +26,7 @@ export const useHandleCartItems = (): useHandleCartItems => {
   const { data } = useQuery<IGetCartOfUserRes>({
     refetchOnWindowFocus: false,
     queryKey: ["getCartItems"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryFn: () => apiGetCartOfUser(),
   });
 
   const { laptopDTOs, totalPayment } = data || {};
