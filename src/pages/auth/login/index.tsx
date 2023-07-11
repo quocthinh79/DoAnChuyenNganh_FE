@@ -110,7 +110,7 @@ export function LoginPage(_props: LoginProps) {
   };
 
   const { mutate: loginFacebook } = useMutation({
-    mutationKey: ["apiLoginGoogle"],
+    mutationKey: ["apiLoginFacebook"],
     mutationFn: apiLoginFacebook,
     onSuccess: (data) => {
       pathname === "" ? navigation("/") : navigation(pathname);
@@ -171,8 +171,12 @@ export function LoginPage(_props: LoginProps) {
                     >
                       Đăng nhập
                     </Button>
-                    <LoginGoogleButton onClick={responseGoogle} />
-                    <FacebookButton onFacebookResponse={responseFacebook} />
+                    <Flex justify={EJustifyFlex.Center}>
+                      <LoginGoogleButton onClick={responseGoogle} />
+                    </Flex>
+                    <Flex justify={EJustifyFlex.Center}>
+                      <FacebookButton onFacebookResponse={responseFacebook} />
+                    </Flex>
                     <Flex justify={EJustifyFlex.Center}>
                       <Link to={routerPathFull.auth.register}>
                         Đăng kí tài khoản
