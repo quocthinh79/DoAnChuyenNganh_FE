@@ -14,6 +14,7 @@ import {
   EJustifyFlex,
   ILogin,
   apiLogin,
+  apiLoginFacebook,
   apiLoginGoogle,
   handleSchemaError,
   messError,
@@ -30,12 +31,11 @@ import LoginFormItem from "./login-form-item";
 import LoginGoogleButton from "./google-login-button/login-google-button";
 import { notification } from "antd";
 import axios from "axios";
-import { gapi } from "gapi-script";
-import {
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from "react-google-login";
-export interface LoginProps {}
+import { gapi } from "gapi-script"
+import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import FacebookButton from './facebook-login-button/login-facebook-button';
+import { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login';
+export interface LoginProps { }
 
 export interface LoginFormProps extends ILogin {
   rememberMe: boolean;
@@ -85,7 +85,7 @@ export function LoginPage(_props: LoginProps) {
         plugin_name: "login google",
       });
     });
-  }, []);
+  }, [])
   const { mutate: loginGoogle } = useMutation({
     mutationKey: ["apiLoginGoogle"],
     mutationFn: apiLoginGoogle,
@@ -110,6 +110,34 @@ export function LoginPage(_props: LoginProps) {
     if ("tokenId" in response) {
       const { tokenId } = response;
       loginGoogle({ tokenId });
+    }
+  };
+
+  const { mutate: loginFacebook } = useMutation({
+    mutationKey: ["apiLoginFacebook"],
+    mutationFn: apiLoginFacebook,
+    onSuccess: (data) => {
+      pathname === "" ? navigation("/") : navigation(pathname);
+      console.log(data.token);
+      setToken(data.token);
+      setRoles(data.roles);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+    },
+    onError: (error: any) => {
+      api["error"]({
+        message: "LỖI",
+        description: messError(error),
+      });
+    },
+  });
+  
+  const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
+    if ('name' in response) {
+      if (response.email && response.name) {
+        const email = response.email;
+        const fullName = response.name;
+        loginFacebook({ fullName, email });
+      }
     }
   };
 
@@ -145,13 +173,12 @@ export function LoginPage(_props: LoginProps) {
                     >
                       Đăng nhập
                     </Button>
-                    <LoginGoogleButton onClick={responseGoogle} />
-                    <a
-                      href="https://www.facebook.com/v16.0/dialog/oauth?redirect_uri=http://localhost:8085/oauth2/authorization/facebook/v2&state=http://localhost:3000&client_id=1217081152339317&client_secret=16023480e21272ccec22bad82d5c50b9"
-                      type="submit"
-                    >
-                      Đăng nhập với Facebook
-                    </a>
+                    <Flex justify={EJustifyFlex.Center}>
+                      <LoginGoogleButton onClick={responseGoogle} />
+                    </Flex>
+                    <Flex justify={EJustifyFlex.Center}>
+                      <FacebookButton onFacebookResponse={responseFacebook} />
+                    </Flex>
                     <Flex justify={EJustifyFlex.Center}>
                       <Link to={routerPathFull.auth.register}>
                         Đăng kí tài khoản

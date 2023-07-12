@@ -6,6 +6,7 @@ import {
   ILoginGoogle,
 } from "src/core/types";
 import instanceAxios from "../instance-axios";
+import ILoginFacebook from "src/core/types/interfaces/ILoginFacebook";
 
 export const apiLogin = ({ username, password }: ILogin) => {
   return instanceAxios
@@ -20,6 +21,14 @@ export const apiLoginGoogle = ({ tokenId }: ILoginGoogle) => {
   return instanceAxios
     .post("/auth/loginGoogle", {
       tokenId,
+    })
+    .then((res) => res.data);
+};
+
+export const apiLoginFacebook = ({ email, fullName }: ILoginFacebook) => {
+  return instanceAxios
+    .post("/auth/loginFacebook", {
+      email, fullName
     })
     .then((res) => res.data);
 };
