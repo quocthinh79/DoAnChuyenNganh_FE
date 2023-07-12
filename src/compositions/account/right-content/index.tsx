@@ -25,7 +25,7 @@ export function AccountRightContent() {
     {
       refetchOnWindowFocus: false,
       queryKey: ["account"],
-      queryFn: () => apiGetOnlyAccount({ token }),
+      queryFn: () => apiGetOnlyAccount(),
       onSuccess({ address }) {
         const [ward, district, city] = address?.split(", ") || [];
 

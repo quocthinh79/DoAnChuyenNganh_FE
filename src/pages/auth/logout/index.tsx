@@ -1,5 +1,6 @@
-import { routerPathFull } from "@core";
+import { routerPathFull, instanceAxios } from "@core";
 import { useStorageRoles, useStorageToken } from "@store";
+import axios from "axios";
 import { useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +15,7 @@ export function Logout(props: LogoutProps) {
   const test = useCallback(() => navigate(routerPathFull.home.root), []);
 
   useEffect(() => {
+    instanceAxios.defaults.headers.Authorization = "";
     setToken("");
     setRoles([]);
     test();

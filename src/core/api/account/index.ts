@@ -2,14 +2,8 @@ import { IGetOnlyAccountReq, IUpdateAccountReq } from "@core";
 import instanceAxios from "../instance-axios";
 import { IDeleteAccountReq } from "src/core/types/interfaces/request/IDeleteAccountReq";
 
-export const apiGetOnlyAccount = ({ token }: IGetOnlyAccountReq) => {
-  return instanceAxios
-    .get("/account/detail", {
-      params: {
-        token,
-      },
-    })
-    .then((res) => res.data);
+export const apiGetOnlyAccount = () => {
+  return instanceAxios.get("/account/detail").then((res) => res.data);
 };
 
 export const apiUpdateAccount = ({
@@ -21,7 +15,6 @@ export const apiUpdateAccount = ({
   password,
   phone,
   sex,
-  token,
   userName,
   dob,
 }: IUpdateAccountReq) => {
@@ -39,15 +32,7 @@ export const apiUpdateAccount = ({
   };
 
   return instanceAxios
-    .put(
-      "/account/update",
-      { ...accountDTO },
-      {
-        params: {
-          token,
-        },
-      }
-    )
+    .put("/account/update", { ...accountDTO })
     .then((res) => res.data);
 };
 
@@ -90,14 +75,6 @@ export const apiUpdateAccountInAdmin = ({
   };
 
   return instanceAxios
-    .put(
-      "/account/admin/update",
-      { ...accountDTO },
-      {
-        params: {
-          token,
-        },
-      }
-    )
+    .put("/account/admin/update", { ...accountDTO })
     .then((res) => res.data);
 };
