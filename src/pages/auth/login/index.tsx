@@ -20,6 +20,7 @@ import {
   messError,
   routerPathFull,
   schemaLogin,
+  instanceAxios,
 } from "@core";
 import { usePathname, useStorageRoles, useStorageToken } from "@store";
 import { useMutation } from "@tanstack/react-query";
@@ -52,10 +53,13 @@ export function LoginPage(_props: LoginProps) {
     mutationKey: ["apiLogin"],
     mutationFn: apiLogin,
     onSuccess: (data) => {
-      pathname === "" ? navigation("/") : navigation(pathname);
+      console.log(data.token);
+      instanceAxios.defaults.headers.Authorization = `Bearer ${data.token}`;
       setToken(data.token);
       setRoles(data.roles);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+      pathname === ""
+        ? navigation("/", { replace: true })
+        : navigation(pathname, { replace: true });
     },
     onError: (error: any) => {
       api["error"]({
@@ -77,8 +81,7 @@ export function LoginPage(_props: LoginProps) {
   useEffect(() => {
     gapi.load("client:auth2", () => {
       gapi.client.init({
-        clientId:
-          "http://localhost:3000",
+        clientId: "http://localhost:3000",
         plugin_name: "login google",
       });
     });
@@ -96,14 +99,15 @@ export function LoginPage(_props: LoginProps) {
       api["error"]({
         message: "LỖI",
         description: messError(error),
-
       });
     },
   });
 
-  const responseGoogle = (response: GoogleLoginResponse | GoogleLoginResponseOffline): void => {
-    console.log(response)
-    if ('tokenId' in response) {
+  const responseGoogle = (
+    response: GoogleLoginResponse | GoogleLoginResponseOffline
+  ): void => {
+    console.log(response);
+    if ("tokenId" in response) {
       const { tokenId } = response;
       loginGoogle({ tokenId });
     }
@@ -123,11 +127,10 @@ export function LoginPage(_props: LoginProps) {
       api["error"]({
         message: "LỖI",
         description: messError(error),
-
       });
     },
   });
-
+  
   const responseFacebook = (response: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
     if ('name' in response) {
       if (response.email && response.name) {
@@ -137,7 +140,6 @@ export function LoginPage(_props: LoginProps) {
       }
     }
   };
-
 
   return (
     <>

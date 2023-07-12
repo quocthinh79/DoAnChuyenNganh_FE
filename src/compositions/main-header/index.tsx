@@ -65,7 +65,7 @@ export function MainHeader() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     queryKey: ["getCartItemsHeader"],
-    queryFn: () => apiGetCartOfUser({ token }),
+    queryFn: () => apiGetCartOfUser(),
     onSuccess(data) {
       const sum = data.laptopDTOs.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.quantity;

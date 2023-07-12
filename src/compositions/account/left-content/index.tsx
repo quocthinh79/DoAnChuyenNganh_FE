@@ -45,7 +45,7 @@ export function AccountLeftContent() {
     {
       refetchOnWindowFocus: false,
       queryKey: ["account"],
-      queryFn: () => apiGetOnlyAccount({ token }),
+      queryFn: () => apiGetOnlyAccount(),
       onSuccess({ fullName, email, phone, sex, dob }) {
         form.setFieldsValue({
           fullName,

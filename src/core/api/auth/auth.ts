@@ -18,10 +18,9 @@ export const apiLogin = ({ username, password }: ILogin) => {
 };
 
 export const apiLoginGoogle = ({ tokenId }: ILoginGoogle) => {
-
   return instanceAxios
     .post("/auth/loginGoogle", {
-      tokenId
+      tokenId,
     })
     .then((res) => res.data);
 };
@@ -33,7 +32,6 @@ export const apiLoginFacebook = ({ email, fullName }: ILoginFacebook) => {
     })
     .then((res) => res.data);
 };
-
 
 export const apiForgotPassword = ({ username, host }: IForgotPassword) => {
   return instanceAxios
